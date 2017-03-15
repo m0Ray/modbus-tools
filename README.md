@@ -1,6 +1,7 @@
 MODBUS-TOOLS
 
-Command-line tools that allows scripts and applications easily interact with MODBUS RTU devices via RS-485 adapter attached to PC or SoC (like Raspberry Pi).
+Command-line tools that allows scripts and applications easily interact with MODBUS RTU devices via RS-485 adapter attached to PC or SoC (like Raspberry Pi). Also supports MODBUS TCP.
+Built on top of libmodbus: http://libmodbus.org
 
 Package consists of 4 tools:
 

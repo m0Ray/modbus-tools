@@ -22,8 +22,8 @@ void usage(char* self, int e) {
   -b: UART data bits: 5-8 (default %d)\n\
   -p: UART parity check: None, Even, Odd (default %c)\n\
   -b: UART stop bits: 1-2 (default %d)\n\
-  -t: register type: Input (default), Register, Bit, Coil\n\
-  -f: output format: Hex (default for inputs and registers), Decimal or Binary (default for bits and coils)\n\
+  -t: register type: Input (default), Register, Bit, Coil, Float32 (register pairs)\n\
+  -f: output format: Hex (default for inputs and registers), Decimal or Binary (default for bits and coils). No effect on Float32 register type.\n\
   -n: retry count (default %d)\n\
   -v: verbose debug on stderr\n", MODBUSTOOLS_DEFAULT_UART, MODBUSTOOLS_DEFAULT_BAUDRATE, MODBUSTOOLS_DEFAULT_DATABITS, MODBUSTOOLS_DEFAULT_PARITY, MODBUSTOOLS_DEFAULT_STOPBITS, MODBUSTOOLS_DEFAULT_RETRIES);
   exit(e);
@@ -100,6 +100,7 @@ int main( int argc, char** argv ) {
           case 'r':
           case 'b':
           case 'c':
+          case 'f':
             rtype=*optarg;
             break;
           default:
@@ -172,6 +173,10 @@ int main( int argc, char** argv ) {
         }
       }
     }
+    if( (rtype == 'f') && (nreg & 0x01)!=0) {
+      fprintf(stderr, "%s: for Float32 type number of registers must be even, but %d given.\n", argv[0], nreg);
+      exit(1);
+    }
   } else {
     fprintf(stderr, "%s: not enough arguments\n", argv[0]);
     usage(argv[0], 1);
@@ -239,6 +244,7 @@ int main( int argc, char** argv ) {
   // Actually read
   modbus_set_slave(modbus, addr);
   uint16_t* ibuf=NULL;
+  Float32* fbuf=NULL;
   uint8_t* cbuf=NULL;
   int result;
 
@@ -258,6 +264,17 @@ int main( int argc, char** argv ) {
       ibuf=malloc(nreg*sizeof(uint16_t));
       for(;retry>0;retry--) {
         if(modbus_read_registers(modbus, reg1, nreg, ibuf)==-1) {
+          result=2;
+        } else {
+          result=0;
+          break;
+        }
+      }
+      break;
+    case 'f':
+      fbuf=malloc(nreg*sizeof(uint16_t));
+      for(;retry>0;retry--) {
+        if(modbus_read_input_registers(modbus, reg1, nreg, (uint16_t*)fbuf)==-1) {
           result=2;
         } else {
           result=0;
@@ -292,7 +309,12 @@ int main( int argc, char** argv ) {
           }
           printf("\n");
           break;
-
+        case 'f':
+          for(int i=0; i<(nreg/2); i++) {
+            printf("%f\t", fbuf[i].fl );
+          }
+          printf("\n");
+          break;
       }
       break;
     case 2:

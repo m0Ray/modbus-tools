@@ -10,3 +10,11 @@
 // Internal defaults
 #define MODBUSTOOLS_DEFAULT_READ_RTYPE 'i'
 #define MODBUSTOOLS_DEFAULT_WRITE_RTYPE 'r'
+
+
+// Some types
+typedef union {
+    float    fl;
+    uint32_t dw;
+    uint16_t w[2];
+} Float32;

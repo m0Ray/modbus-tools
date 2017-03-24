@@ -14,3 +14,4 @@ TODO:
 * modbus-id functionality (now it's just a stub)
 * modbus-read and modbus-write support for bits and coils
 * configurable RS-485 (half-duplex) and RS-232 (full-duplex) modes
+* support for 0x17 MODBUS function (multiple register read/write)

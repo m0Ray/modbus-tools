@@ -242,6 +242,15 @@ int main( int argc, char** argv ) {
   modbus_set_slave(modbus, addr);
 
   int result;
+  //~ ilyxa 11.3.18 Coil Write_bit
+	int regs_t=0;
+	if(regs[0]>0) {
+		regs_t=65280;
+	} else {
+		regs_t=0;
+	}
+	//~ fprintf(stderr,"%i, %i\n",regs[0], regs_t);
+
 
   switch(rtype) {
     case 'r':
@@ -255,7 +264,14 @@ int main( int argc, char** argv ) {
       }
       break;
     case 'c':
-      break;
+		for(;retry>0;retry--) {
+			if(modbus_write_bit(modbus,reg1,regs_t)==-1) {
+				result=2;
+			} else {
+				result=0;
+				break;
+			}
+		}
   }
 
 // Debug output

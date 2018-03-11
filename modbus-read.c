@@ -283,8 +283,18 @@ int main( int argc, char** argv ) {
       }
       break;
     case 'b':
+		break;
     case 'c':
-      break;
+      cbuf=malloc(sizeof(uint8_t));
+      for(;retry>0;retry--) {
+		  if(modbus_read_bits(modbus,reg1,nreg, (uint8_t*)cbuf)==-1) {
+			  result=2;
+		  } else {
+			  result=0;
+			  break;
+		  }
+		  break;
+	  }
   }
 
 // Debug output

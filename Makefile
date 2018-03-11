@@ -9,10 +9,10 @@ modbus-id: modbus-id.c modbustools.h
 	gcc -o modbus-id -lmodbus modbus-id.c
 
 modbus-read: modbus-read.c modbustools.h
-	gcc -o modbus-read -lmodbus modbus-read.c
+	gcc -ggdb -o modbus-read -lmodbus modbus-read.c
 
 modbus-write: modbus-write.c modbustools.h
-	gcc -o modbus-write -lmodbus modbus-write.c
+	gcc -ggdb -o modbus-write -lmodbus modbus-write.c
 
 install: ${BINS}
 	for f in $(BINS); do cp $$f /usr/bin; done

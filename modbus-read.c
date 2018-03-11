@@ -284,10 +284,11 @@ int main( int argc, char** argv ) {
       break;
     case 'b':
 		break;
+//~ ilyxa 11.3.18 single coil read		
     case 'c':
-      cbuf=malloc(sizeof(uint8_t));
+      cbuf=malloc(nreg*sizeof(uint8_t));
       for(;retry>0;retry--) {
-		  if(modbus_read_bits(modbus,reg1,nreg, (uint8_t*)cbuf)==-1) {
+		  if(modbus_read_bits(modbus, reg1, nreg, (uint8_t*)cbuf)==-1) {
 			  result=2;
 		  } else {
 			  result=0;
@@ -325,6 +326,19 @@ int main( int argc, char** argv ) {
           }
           printf("\n");
           break;
+		//~ ilyxa 11.3.18 coil read
+		case 'c':
+          for(int i=0; i<nreg; i++) {
+            switch(outformat){
+              case 'H':
+                printf("%x\t", cbuf[0]);
+                break;
+              case 'D':
+                printf("%d\t", cbuf[0]);
+                break;
+            }
+			printf("\n");
+		}
       }
       break;
     case 2:

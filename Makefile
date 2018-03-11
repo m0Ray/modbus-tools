@@ -1,18 +1,22 @@
 BINS=modbus-ping modbus-id modbus-read modbus-write
+CC=gcc
+#CFLAGS=-ggdb
+CFLAGS=-O3
+LDFLAGS=-lmodbus
 
 all: ${BINS}
 
 modbus-ping: modbus-ping.c modbustools.h
-	gcc -o modbus-ping -lmodbus modbus-ping.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o modbus-ping modbus-ping.c
 
 modbus-id: modbus-id.c modbustools.h
-	gcc -o modbus-id -lmodbus modbus-id.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o modbus-id modbus-id.c
 
 modbus-read: modbus-read.c modbustools.h
-	gcc -ggdb -o modbus-read -lmodbus modbus-read.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o modbus-read modbus-read.c
 
 modbus-write: modbus-write.c modbustools.h
-	gcc -ggdb -o modbus-write -lmodbus modbus-write.c
+	$(CC) $(CFLAGS) $(LDFLAGS) -o modbus-write modbus-write.c
 
 install: ${BINS}
 	for f in $(BINS); do cp $$f /usr/bin; done
